@@ -1,14 +1,14 @@
-const createElements =(arrs) => {
-    const htmlElements = arrs.map((el) =>  `<span class= "btn"> ${el}</span>`);
+const createElements = (arrs) => {
+    const htmlElements = arrs.map((el) => `<span class= "btn"> ${el}</span>`);
     // console.log(htmlElements.join(" "));
     return htmlElements.join(" ");
 }
 // ----------------------------------------------------------------------------------
-const manageSpinner = (status) =>{
-    if(status == true){
+const manageSpinner = (status) => {
+    if (status == true) {
         document.getElementById("spinner").classList.remove("hidden");
         document.getElementById("word-container").classList.add("hidden");
-    }else{
+    } else {
         document.getElementById("word-container").classList.remove("hidden");
         document.getElementById("spinner").classList.add("hidden");
     }
@@ -70,7 +70,7 @@ const displalyLevelWord = (words) => {
             <p class="text-xl font-medium text-gray-400 rounded py-10 space-y-6">এই Lesson এ এখনো কোন Vocabulary যুক্ত করা হয়নি। </p>
             <h2 class="text-5xl font-bold rounded py-10 space-y-6">নেক্সট Lesson এ যান</h2>
         </div>`;
-         manageSpinner(false);
+        manageSpinner(false);
         return;
     };
 
@@ -97,7 +97,7 @@ const displalyLevelWord = (words) => {
         </div>`;
         wordContainer.appendChild(card);
     });
-     manageSpinner(false);
+    manageSpinner(false);
 };
 //----------------------------------------------------------------------------------
 const loadWordDetail = async (wordId) => {
@@ -131,3 +131,20 @@ const displayWordDetails = (word) => {
 }
 
 loadLessons();
+
+document.getElementById("btn-search").addEventListener("click", () => {
+    removeActive();
+    const input = document.getElementById("input-search");
+    const searchValue = input.value.trim().toLowerCase();
+    console.log(searchValue);
+
+    fetch("https://openapi.programming-hero.com/api/words/all")
+        .then(res => res.json())
+        .then(data => {
+            // console.log(data)
+            const allWords = data.data;
+            console.log(allWords);
+            const filterWords = allWords.filter((word) => word.word.toLowerCase().includes(searchValue));
+            displalyLevelWord(filterWords);
+        });
+});
